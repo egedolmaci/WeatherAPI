@@ -17,8 +17,11 @@ public class ExternalService {
     }
 
 
-    public Mono<DailyModel> getDailyfromAPI() {
+    public Mono<DailyModel> getDailyfromAPI(String location) {
+        String url = String.format("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/%s?unitGroup=us&key=W9JARNCLVED6QJWZW32FEGC3P&contentType=json", location);
+        
         return webClient.get()
+            .uri(url)
             .retrieve()
             .bodyToMono(DailyModel.class);
     }
