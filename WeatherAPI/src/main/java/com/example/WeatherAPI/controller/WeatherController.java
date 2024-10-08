@@ -36,7 +36,7 @@ public class WeatherController {
     }
     
     @GetMapping("/daily/{location}")
-    public String getWeather(@PathVariable String location) throws JsonProcessingException {
+    public DailyModel getWeather(@PathVariable String location) throws JsonProcessingException {
 
         String redisKey = REDIS_PREFIX + location;
 
@@ -48,14 +48,7 @@ public class WeatherController {
         redisService.saveData(redisKey, weatherData) ;
        } 
 
-       try {
-       String weather = jsonService.convertToJson(weatherData);
-       return weather;
-
-       } catch(Error e) {
-        return "Error";
-
-       }
+    return weatherData;
        
 
     }
