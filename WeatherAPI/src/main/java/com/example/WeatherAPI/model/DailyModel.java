@@ -25,10 +25,5 @@ public class DailyModel {
     public void setDays(List<Day> days) {
         this.days = days;
     }
-    @Override
-    public String toString() {
-        return "DailyModel [address=" + address + ", timezone=" + timezone + ", days=" + days + "]";
-    }
-
     
 }

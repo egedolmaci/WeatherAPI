@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.WeatherAPI.model.DailyModel;
 import com.example.WeatherAPI.service.ExternalService;
+import com.example.WeatherAPI.service.JSONService;
 import com.example.WeatherAPI.service.RedisService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
 
 
 @RestController
@@ -22,6 +25,9 @@ public class WeatherController {
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private JSONService jsonService;
+
     private static final String REDIS_PREFIX = "weather:";
 
     @GetMapping("/dailyWorks/{location}")
@@ -30,20 +36,27 @@ public class WeatherController {
     }
     
     @GetMapping("/daily/{location}")
-    public String getWeather(@PathVariable String location) {
+    public String getWeather(@PathVariable String location) throws JsonProcessingException {
 
         String redisKey = REDIS_PREFIX + location;
 
-        String weatherData = redisService.getData(redisKey);
+        DailyModel weatherData = redisService.getData(redisKey);
         
        if (weatherData == null) {
         System.out.println("weather data not found");
-        DailyModel weatherDataObject = externalService.getDailyfromAPI(location).block();
-        weatherData = weatherDataObject.toString();
-        redisService.saveData(redisKey, weatherData);
+        weatherData = externalService.getDailyfromAPI(location).block();
+        redisService.saveData(redisKey, weatherData) ;
        } 
+
+       try {
+       String weather = jsonService.convertToJson(weatherData);
+       return weather;
+
+       } catch(Error e) {
+        return "Error";
+
+       }
        
-       return weatherData;
 
     }
 

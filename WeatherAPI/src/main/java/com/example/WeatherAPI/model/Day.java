@@ -30,13 +30,5 @@ public class Day {
         this.conditions = conditions;
     }
 
-    @Override
-    public String toString() {
-        return "Day{" +
-                "datetime='" + datetime + '\'' +
-                ", temp=" + temp +
-                ", conditions='" + conditions + '\'' +
-                '}';
-    }
 }
 

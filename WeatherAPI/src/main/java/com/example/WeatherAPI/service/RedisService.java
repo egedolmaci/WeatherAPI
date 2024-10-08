@@ -1,20 +1,28 @@
 package com.example.WeatherAPI.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.cache.CacheProperties.Redis;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import com.example.WeatherAPI.model.DailyModel;
 
 @Service
 public class RedisService {
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, DailyModel> redisTemplate;
 
-    public void saveData(String key, String value) {
+    @Autowired
+    public RedisService(RedisTemplate<String, DailyModel> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    public void saveData(String key, DailyModel value) {
         redisTemplate.opsForValue().set(key, value);
     }
 
-    public String getData(String key) {
+    public DailyModel getData(String key) {
         return redisTemplate.opsForValue().get(key);
     }
 
